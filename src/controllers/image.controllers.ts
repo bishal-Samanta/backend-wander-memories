@@ -3,6 +3,8 @@ import { Request , Response } from "express";
 import { HttpResponse } from "../domain/response";
 import { Code } from "../enums/code.enum";
 import { Status } from "../enums/status.enum";
+import { getObjectURL, putObjectURL } from "../services/uploadFileInS3";
+import generateUniqueFileName from "../utils/generateUniqueFileName";
 
 
 
@@ -175,6 +177,30 @@ export const deleteImage = async ( req: Request , res : Response ) : Promise<Res
 
     }
     catch(err : unknown){
+        console.log(err);
+        return res.status(Code.INTERNAL_SERVER_ERROR).send(
+            new HttpResponse(Code.INTERNAL_SERVER_ERROR, Status.INTERNAL_SERVER_ERROR , "Internal error from catch block!" , {err})
+        );
+    }
+}
+
+
+
+export const uploadImageInS3 = async (req: Request , res: Response) =>{
+
+    const {fileName , contentType } = req.body;
+    try{
+        
+        const key = generateUniqueFileName(fileName)
+        
+        const url = await putObjectURL(`${key}` , `${contentType}` )      
+        
+        res.status(Code.OK).send(
+            new HttpResponse(Code.OK , Status.OK , "Response in from s3" , { url : url , key : key , contentType : contentType   })
+        )
+
+    }
+    catch(err){
         console.log(err);
         return res.status(Code.INTERNAL_SERVER_ERROR).send(
             new HttpResponse(Code.INTERNAL_SERVER_ERROR, Status.INTERNAL_SERVER_ERROR , "Internal error from catch block!" , {err})
