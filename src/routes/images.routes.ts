@@ -1,25 +1,28 @@
-import { Router  } from "express";
-import { createImage, deleteImage, getImage, getImages, updateImage, uploadImageInS3 } from "../controllers/image.controllers";
+import { Router } from "express";
+import {
+  createImage,
+  deleteImage,
+  updateImage,
+} from "../controllers/images/images.controllers";
+import { getImage, getImages } from "../controllers/images/getImages.controllers";
+import { uploadImageInS3 } from "../controllers/images/uploadImages.controller";
+
+
 
 const imagesRoutes = Router();
 
+imagesRoutes.post("/upload/s3", uploadImageInS3);
 
-//Get all the Image
-imagesRoutes.get("/" , getImages);
+imagesRoutes.get("/", getImages);
 
-//Create Image -> with post request
-imagesRoutes.post("/" , createImage);
+imagesRoutes.post("/", createImage);
 
-imagesRoutes.post("/upload" , uploadImageInS3 );
+imagesRoutes.get("/:id", getImage);
 
-//Get One Image
-imagesRoutes.get("/:id" , getImage);
+imagesRoutes.patch("/:id", updateImage);
 
-//Update One Image 
-imagesRoutes.patch("/:id" , updateImage);
+imagesRoutes.delete("/:id", deleteImage);
 
 
-//Delete One Image 
-imagesRoutes.delete("/:id" , deleteImage);
 
 export default imagesRoutes;

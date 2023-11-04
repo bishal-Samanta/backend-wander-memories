@@ -5,9 +5,9 @@ import { HttpResponse } from "./domain/response";
 import { Status } from "./enums/status.enum";
 import cors from "cors";
 import morgan from "morgan";
-import dairiesRoutes from "./routes/dairies.routes";
+import dairiesRoutes from "./routes/trips.routes";
 import imagesRoutes from "./routes/images.routes";
-import geolocationRoutes from "./routes/geolocation.routes";
+import geolocationRoutes from "./routes/locations.routes";
 
 
 const app: Application = express();
@@ -23,9 +23,9 @@ require('dotenv').config();
 
 
 //APIS
-app.use("/api/dairies" , dairiesRoutes )
+app.use("/api/trips" , dairiesRoutes )
 app.use("/api/images" , imagesRoutes )
-app.use("/api/geolocations" , geolocationRoutes )
+app.use("/api/locations" , geolocationRoutes )
 
 
 //API main Route
