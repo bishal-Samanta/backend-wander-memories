@@ -5,6 +5,7 @@ import { Code } from "../../enums/code.enum";
 import { Status } from "../../enums/status.enum";
 import { sortingPrismaConfig } from "../utils/sort.config";
 import { paginationPrismaConfig } from "../utils/pagination.config";
+import { requiredPrismaConfig } from "../utils/required.config";
 
 const prisma = new PrismaClient();
 
@@ -17,19 +18,20 @@ export const getTrips = async (
         
     const query : any = req.query;
 
-    const { sort , order , limit , page } =  query ;
+    const { sort , order , limit , page , required } =  query ;
+  
     
     //Prisma Configs 
     const sortOptions  = sortingPrismaConfig(sort , order);
     const paginationOptions = paginationPrismaConfig(limit , page)
+    const requiredOptions = requiredPrismaConfig(required);
 
-    
-    
     
     try {
         const trips = await prisma.trip.findMany({
             ...sortOptions,
-            ...paginationOptions 
+            ...paginationOptions ,
+            ...requiredOptions
         });
 
         return res
