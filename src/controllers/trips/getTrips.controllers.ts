@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import { HttpResponse } from "../../domain/response";
 import { Code } from "../../enums/code.enum";
 import { Status } from "../../enums/status.enum";
+import { sortingPrismaConfig } from "../utils/sort.config";
 
 const prisma = new PrismaClient();
 
@@ -11,8 +12,26 @@ export const getTrips = async (
     req: Request,
     res: Response
     ): Promise<Response<HttpResponse>> => {
+    
+        
+    const query : any = req.query;
+    const { sort , order } =  query ;
+    
+    //Sorting 
+    let sortOptions;
+    if( sort ){
+        sortOptions  = sortingPrismaConfig(sort , order);
+    }
+
+
+
+
+
+    
     try {
-        const trips = await prisma.trip.findMany();
+        const trips = await prisma.trip.findMany({
+            ...sortOptions
+        });
 
         return res
         .status(Code.OK)
