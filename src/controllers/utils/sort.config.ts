@@ -1,8 +1,14 @@
-export const sortingPrismaConfig = ( sort : string[] | string , order :  string ) =>{
+export const sortingPrismaConfig = ( sort : string[] | string | undefined , order :  string | undefined ) =>{
+
+    
 
     const sortOptions : { orderBy : any } = {
         orderBy : []
-    }    
+    }
+    
+    if(!sort && !order){
+        return sortOptions;
+    }
 
     //Implementing ssorting and order
     console.log(sort)

@@ -4,6 +4,7 @@ import { HttpResponse } from "../../domain/response";
 import { Code } from "../../enums/code.enum";
 import { Status } from "../../enums/status.enum";
 import { sortingPrismaConfig } from "../utils/sort.config";
+import { paginationPrismaConfig } from "../utils/pagination.config";
 
 const prisma = new PrismaClient();
 
@@ -15,22 +16,20 @@ export const getTrips = async (
     
         
     const query : any = req.query;
-    const { sort , order } =  query ;
+
+    const { sort , order , limit , page } =  query ;
     
-    //Sorting 
-    let sortOptions;
-    if( sort ){
-        sortOptions  = sortingPrismaConfig(sort , order);
-    }
+    //Prisma Configs 
+    const sortOptions  = sortingPrismaConfig(sort , order);
+    const paginationOptions = paginationPrismaConfig(limit , page)
 
-
-
-
-
+    
+    
     
     try {
         const trips = await prisma.trip.findMany({
-            ...sortOptions
+            ...sortOptions,
+            ...paginationOptions 
         });
 
         return res
