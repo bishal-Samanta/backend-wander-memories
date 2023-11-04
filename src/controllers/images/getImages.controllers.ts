@@ -6,6 +6,7 @@ import { Status } from "../../enums/status.enum";
 import { sortingPrismaConfig } from "../utils/sort.config";
 import { paginationPrismaConfig } from "../utils/pagination.config";
 import { requiredPrismaConfig } from "../utils/required.config";
+import { searchPrismaConfig } from "../utils/search.config";
 
 const prisma = new PrismaClient();
 
@@ -16,18 +17,22 @@ export const getImages = async (
 
 
     const query : any = req.query;
-    const { sort , order , limit , page , required } =  query ;
+    const { sort , order , limit , page , required , search } =  query ;
     
     //Sorting 
     const sortOptions  = sortingPrismaConfig(sort , order);
     const paginationOptions = paginationPrismaConfig(limit , page)
     const requiredOptions = requiredPrismaConfig(required);
+    const searchOptions = searchPrismaConfig(search , ["name" , "description"]);
 
     try {
       const images = await prisma.image.findMany({
         ...sortOptions,
         ...paginationOptions,
         ...requiredOptions,
+        where : {
+          ...searchOptions
+        },
         include: {
           location: true,
         },

@@ -6,6 +6,7 @@ import { Status } from "../../enums/status.enum";
 import { sortingPrismaConfig } from "../utils/sort.config";
 import { paginationPrismaConfig } from "../utils/pagination.config";
 import { requiredPrismaConfig } from "../utils/required.config";
+import { searchPrismaConfig } from "../utils/search.config";
 
 const prisma = new PrismaClient();
 
@@ -18,20 +19,24 @@ export const getTrips = async (
         
     const query : any = req.query;
 
-    const { sort , order , limit , page , required } =  query ;
+    const { sort , order , limit , page , required , search } =  query ;
   
     
     //Prisma Configs 
     const sortOptions  = sortingPrismaConfig(sort , order);
     const paginationOptions = paginationPrismaConfig(limit , page)
     const requiredOptions = requiredPrismaConfig(required);
+    const searchOptions = searchPrismaConfig(search , ["name" , "description"]);
 
     
     try {
         const trips = await prisma.trip.findMany({
             ...sortOptions,
             ...paginationOptions ,
-            ...requiredOptions
+            ...requiredOptions ,
+            where : {
+                ...searchOptions
+            }
         });
 
         return res

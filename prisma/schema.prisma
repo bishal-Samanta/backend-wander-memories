@@ -3,6 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
 }
 
 datasource db {
@@ -20,6 +21,8 @@ model Location {
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
   images      Image[]  // One-to-Many relation with Image
+
+  @@fulltext([name])
 }
 
 model Trip {
@@ -32,6 +35,8 @@ model Trip {
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
   images      Image[]  // One-to-Many relation with Image
+
+  @@fulltext([name , description])
 }
 
 model Image {
@@ -46,4 +51,6 @@ model Image {
   updated_at  DateTime @updatedAt
   location    Location? @relation(fields: [location_id], references: [id])
   trip        Trip      @relation(fields: [trip_id], references: [id])
+  
+  @@fulltext([name , description])
 }
