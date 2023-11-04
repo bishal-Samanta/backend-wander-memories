@@ -36,7 +36,7 @@ export const getLocations = async (
           )
         );
     }
-  };
+};
   
   export const getLocation = async (
     req: Request,
