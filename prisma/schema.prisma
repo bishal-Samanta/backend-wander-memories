@@ -10,96 +10,40 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// User model for authentication (optional)
-model User {
-  id       Int       @id @default(autoincrement())
-  username String    @unique
-  email    String    @unique
-  password String
-  diaries  Dairy[]   
+
+model Location {
+  id          Int      @id @default(autoincrement())
+  name        String
+  latitude    Float
+  longitude   Float
+  location_image  String?
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  images      Image[]  // One-to-Many relation with Image
 }
 
-// Diary model to store travel diaries
-model Dairy {
-  id           Int       @id @default(autoincrement())
-  title        String
-  description  String
-  userId       Int?      
-  user         User?     @relation(fields: [userId], references: [id])
-  images       Image[]
-  createdAt    DateTime  @default(now())
+model Trip {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  trip_image  String?
+  start_date  DateTime
+  end_date    DateTime?
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  images      Image[]  // One-to-Many relation with Image
 }
 
-// Image model to store uploaded images
 model Image {
-  id            Int         @id @default(autoincrement())
-  url           String      @unique
-  name          String
-  geolocations  Geolocation[] 
-  diaryId       Int?  
-  diary         Dairy?       @relation(fields: [diaryId], references: [id])
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String
+  image_url   String
+  image_date  DateTime?
+  location_id Int?     // Optional foreign key to Location
+  trip_id     Int
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  location    Location? @relation(fields: [location_id], references: [id])
+  trip        Trip      @relation(fields: [trip_id], references: [id])
 }
-
-
-// Geolocation model to store location data
-model Geolocation {
-  id         Int      @id @default(autoincrement())
-  name       String   
-  lat        Float    
-  long       Float    
-  image      Image    @relation(fields: [imageId], references: [id])
-  imageId    Int     
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

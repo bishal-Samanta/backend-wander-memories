@@ -11,7 +11,7 @@ export const getLocations = async (
     res: Response
   ): Promise<Response<HttpResponse>> => {
     try {
-      const geolocations = await prisma.geolocation.findMany();
+      const locations = await prisma.location.findMany();
   
       return res
         .status(Code.OK)
@@ -19,8 +19,8 @@ export const getLocations = async (
           new HttpResponse(
             Code.OK,
             Status.OK,
-            `Data Retrived for : Geolocations`,
-            geolocations
+            `Data Retrived for : locations`,
+            locations
           )
         );
     } catch (err: unknown) {
@@ -43,20 +43,20 @@ export const getLocations = async (
     res: Response
   ): Promise<Response<HttpResponse>> => {
     try {
-      const geolocation = await prisma.geolocation.findUnique({
+      const location = await prisma.location.findUnique({
         where: {
           id: Number(req.params.id),
         },
       });
   
-      if (!geolocation) {
+      if (!location) {
         return res
           .status(Code.NOT_FOUND)
           .send(
             new HttpResponse(
               Code.NOT_FOUND,
               Status.NOT_FOUND,
-              `Geolocation not exist with the id : ${req.params.id}`
+              `Location not exist with the id : ${req.params.id}`
             )
           );
       }
@@ -68,7 +68,7 @@ export const getLocations = async (
             Code.OK,
             Status.OK,
             `Data Retrived for : geolocation`,
-            { ...geolocation }
+            { ...location }
           )
         );
     } catch (err: unknown) {

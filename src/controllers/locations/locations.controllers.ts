@@ -15,28 +15,28 @@ export const createLocation = async (
   try {
     //Check if data with same id exist in the table
     if (req.body.id) {
-      const geolocation = await prisma.geolocation.findUnique({
+      const location = await prisma.location.findUnique({
         where: {
           id: Number(req.body.id),
         },
       });
 
-      if (geolocation) {
+      if (location) {
         return res
           .status(Code.ALREADY_EXIST)
           .send(
             new HttpResponse(
               Code.ALREADY_EXIST,
               Status.ALREADY_EXIST,
-              `Data with id ${req.body.id} already exist in geolocation table!`,
-              { ...geolocation }
+              `Data with id ${req.body.id} already exist in location table!`,
+              { ...location }
             )
           );
       }
     }
 
     //Create dairy
-    const geolocation = await prisma.geolocation.create({
+    const location = await prisma.location.create({
       data: {
         ...req.body,
       },
@@ -48,8 +48,8 @@ export const createLocation = async (
         new HttpResponse(
           Code.OK,
           Status.OK,
-          `Data created for Geolocation with ID : ${geolocation.id}`,
-          { ...geolocation }
+          `Data created for location with ID : ${location.id}`,
+          { ...location }
         )
       );
   } catch (err: unknown) {
@@ -72,27 +72,27 @@ export const updateLocation = async (
   res: Response
 ): Promise<Response<HttpResponse>> => {
   try {
-    const geolocation = await prisma.geolocation.findUnique({
+    const location = await prisma.location.findUnique({
       where: {
         id: Number(req.params.id),
       },
     });
 
     //Id data not exist
-    if (!geolocation) {
+    if (!location) {
       return res
         .status(Code.NOT_FOUND)
         .send(
           new HttpResponse(
             Code.NOT_FOUND,
             Status.NOT_FOUND,
-            `Data with id : ${req.params.id} not exist in geolocation table!`
+            `Data with id : ${req.params.id} not exist in location table!`
           )
         );
     }
 
     //Update
-    const updatedGeolocation = await prisma.geolocation.update({
+    const updatedLocation = await prisma.location.update({
       where: {
         id: Number(req.params.id),
       },
@@ -108,7 +108,7 @@ export const updateLocation = async (
           Code.OK,
           Status.OK,
           `Data with id : ${req.params.id} updated!`,
-          { ...updatedGeolocation }
+          { ...updatedLocation }
         )
       );
   } catch (err: unknown) {
@@ -131,7 +131,7 @@ export const deleteLocation = async (
   res: Response
 ): Promise<Response<HttpResponse>> => {
   try {
-    const geolocation = await prisma.geolocation.findUnique({
+    const geolocation = await prisma.location.findUnique({
       where: {
         id: Number(req.params.id),
       },
@@ -150,7 +150,7 @@ export const deleteLocation = async (
         );
     }
 
-    const deletedGeolocation = await prisma.geolocation.delete({
+    const deletedGeolocation = await prisma.location.delete({
       where: {
         id: Number(req.params.id),
       },

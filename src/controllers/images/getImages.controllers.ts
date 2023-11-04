@@ -13,7 +13,7 @@ export const getImages = async (
     try {
       const images = await prisma.image.findMany({
         include: {
-          geolocations: true,
+          location: true,
         },
       });
   

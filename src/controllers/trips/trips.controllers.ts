@@ -4,6 +4,7 @@ import { HttpResponse } from "../../domain/response";
 import { Code } from "../../enums/code.enum";
 import { Status } from "../../enums/status.enum";
 
+
 const prisma = new PrismaClient();
 
 
@@ -15,28 +16,28 @@ export const createTrip = async (
   try {
     //Check if data with same id exist in the table
     if (req.body.id) {
-      const dairy = await prisma.dairy.findUnique({
+      const trip = await prisma.trip.findUnique({
         where: {
           id: Number(req.body.id),
         },
       });
 
-      if (dairy) {
+      if (trip) {
         return res
           .status(Code.ALREADY_EXIST)
           .send(
             new HttpResponse(
               Code.ALREADY_EXIST,
               Status.ALREADY_EXIST,
-              `Data with id ${req.body.id} already exist in dairy table!`,
-              { ...dairy }
+              `Data with id ${req.body.id} already exist in Trip table!`,
+              { ...trip }
             )
           );
       }
     }
 
     //Create dairy
-    const dairy = await prisma.dairy.create({
+    const trip = await prisma.trip.create({
       data: {
         ...req.body,
       },
@@ -48,8 +49,8 @@ export const createTrip = async (
         new HttpResponse(
           Code.OK,
           Status.OK,
-          `Data created for Dairies with ID : ${dairy.id}`,
-          { ...dairy }
+          `Data created for Trip with ID : ${trip.id}`,
+          { ...trip }
         )
       );
   } catch (err: unknown) {
@@ -72,27 +73,27 @@ export const updateTrip = async (
   res: Response
 ): Promise<Response<HttpResponse>> => {
   try {
-    const dairy = await prisma.dairy.findUnique({
+    const trip = await prisma.trip.findUnique({
       where: {
         id: Number(req.params.id),
       },
     });
 
     //Id data not exist
-    if (!dairy) {
+    if (!trip) {
       return res
         .status(Code.NOT_FOUND)
         .send(
           new HttpResponse(
             Code.NOT_FOUND,
             Status.NOT_FOUND,
-            `Data with id : ${req.params.id} not exist in Dairy table!`
+            `Data with id : ${req.params.id} not exist in Trip table!`
           )
         );
     }
 
     //Update
-    const updatedDairy = await prisma.dairy.update({
+    const updatedTrip = await prisma.trip.update({
       where: {
         id: Number(req.params.id),
       },
@@ -108,7 +109,7 @@ export const updateTrip = async (
           Code.OK,
           Status.OK,
           `Data with id : ${req.params.id} updated!`,
-          updatedDairy
+          updatedTrip
         )
       );
   } catch (err: unknown) {
@@ -131,26 +132,26 @@ export const deleteTrip = async (
   res: Response
 ): Promise<Response<HttpResponse>> => {
   try {
-    const dairy = await prisma.dairy.findUnique({
+    const trip = await prisma.trip.findUnique({
       where: {
         id: Number(req.params.id),
       },
     });
 
     //Id data not exist
-    if (!dairy) {
+    if (!trip) {
       return res
         .status(Code.NOT_FOUND)
         .send(
           new HttpResponse(
             Code.NOT_FOUND,
             Status.NOT_FOUND,
-            `Data with id : ${req.params.id} not exist in Dairy table!`
+            `Data with id : ${req.params.id} not exist in Trip table!`
           )
         );
     }
 
-    const deletedDairy = await prisma.dairy.delete({
+    const deletedTrip = await prisma.trip.delete({
       where: {
         id: Number(req.params.id),
       },

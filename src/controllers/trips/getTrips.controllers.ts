@@ -12,7 +12,7 @@ export const getTrips = async (
     res: Response
     ): Promise<Response<HttpResponse>> => {
     try {
-        const dairies = await prisma.dairy.findMany();
+        const trips = await prisma.trip.findMany();
 
         return res
         .status(Code.OK)
@@ -20,8 +20,8 @@ export const getTrips = async (
             new HttpResponse(
             Code.OK,
             Status.OK,
-            `Data Retrived for : Dairies`,
-            dairies
+            `Data Retrived for : Trips`,
+            trips
             )
         );
     } catch (err: unknown) {
@@ -46,27 +46,27 @@ req: Request,
 res: Response
 ): Promise<Response<HttpResponse>> => {
 try {
-    const dairy = await prisma.dairy.findUnique({
+    const trip = await prisma.trip.findUnique({
     where: {
         id: Number(req.params.id),
     },
     include: {
         images: {
         include: {
-            geolocations: true,
+            location: true,
         },
         },
     },
     });
 
-    if (!dairy) {
+    if (!trip) {
     return res
         .status(Code.NOT_FOUND)
         .send(
         new HttpResponse(
             Code.NOT_FOUND,
             Status.NOT_FOUND,
-            `Dairy not exist with the id : ${req.params.id}`
+            `Trip not exist with the id : ${req.params.id}`
         )
         );
     }
@@ -74,8 +74,8 @@ try {
     return res
     .status(Code.OK)
     .send(
-        new HttpResponse(Code.OK, Status.OK, `Data Retrived for : Dairies`, {
-        ...dairy,
+        new HttpResponse(Code.OK, Status.OK, `Data Retrived for : Trip`, {
+        ...trip,
         })
     );
 } catch (err: unknown) {
