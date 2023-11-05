@@ -18,7 +18,7 @@ export const getImages = async (
 
 
     const query : any = req.query;
-    const { sort , order , limit , page , required , search , location , trip } =  query ;
+    const { sort , order , limit , page , required , search , location , trip , populate } =  query ;
     
     //Sorting 
     const sortOptions  = sortingPrismaConfig(sort , order);
@@ -39,7 +39,8 @@ export const getImages = async (
           ...filterOptions
         },
         include : {
-          location : true,
+          location : Boolean(populate)?true : false ,
+          trip : Boolean(populate)?true : false
         }
       });
   

@@ -21,7 +21,7 @@ export const getTrips = async (
         
     const query : any = req.query;
 
-    const { sort , order , limit , page , required , search , location , month , year } =  query ;
+    const { sort , order , limit , page , required , search , location , month , year , populate } =  query ;
   
     
     //Prisma Configs 
@@ -44,7 +44,7 @@ export const getTrips = async (
                 
             },
             include: {
-             
+                images : Boolean(populate)?true : false
             }
            
         });

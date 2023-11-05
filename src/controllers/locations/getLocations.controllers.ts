@@ -17,7 +17,7 @@ export const getLocations = async (
   ): Promise<Response<HttpResponse>> => {
 
     const query : any = req.query;
-    const { sort , order , limit , page , required , search , trip } =  query ;
+    const { sort , order , limit , page , required , search , trip , populate } =  query ;
     
     //Sorting 
     const sortOptions  = sortingPrismaConfig(sort , order);
@@ -37,7 +37,7 @@ export const getLocations = async (
           
         },
         include: {
-          images : true ,
+          images :Boolean(populate)?true : false , 
         }
       });
   
