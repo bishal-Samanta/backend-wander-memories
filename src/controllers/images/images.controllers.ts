@@ -34,11 +34,12 @@ export const createImage = async (
       }
     }
 
+
     //Create dairy
     const image = await prisma.image.create({
       data: {
         ...req.body,
-      },
+      }
     });
 
     return res

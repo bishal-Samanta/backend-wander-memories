@@ -19,7 +19,7 @@ export const getTrips = async (
         
     const query : any = req.query;
 
-    const { sort , order , limit , page , required , search } =  query ;
+    const { sort , order , limit , page , required , search , month } =  query ;
   
     
     //Prisma Configs 
@@ -27,6 +27,15 @@ export const getTrips = async (
     const paginationOptions = paginationPrismaConfig(limit , page)
     const requiredOptions = requiredPrismaConfig(required);
     const searchOptions = searchPrismaConfig(search , ["name" , "description"]);
+    let filterOption;
+
+    // if(month){
+    //     filterOption = {
+    //         start_date : {
+    //             contains : month.toString()
+    //         }
+    //     }
+    // }
 
     
     try {
@@ -35,8 +44,10 @@ export const getTrips = async (
             ...paginationOptions ,
             ...requiredOptions ,
             where : {
-                ...searchOptions
-            }
+                ...searchOptions,
+
+            },
+           
         });
 
         return res

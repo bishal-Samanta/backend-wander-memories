@@ -21,7 +21,6 @@ model Location {
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
   images      Image[]  // One-to-Many relation with Image
-
   @@fulltext([name])
 }
 
@@ -35,7 +34,6 @@ model Trip {
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
   images      Image[]  // One-to-Many relation with Image
-
   @@fulltext([name , description])
 }
 
@@ -51,6 +49,5 @@ model Image {
   updated_at  DateTime @updatedAt
   location    Location? @relation(fields: [location_id], references: [id])
   trip        Trip      @relation(fields: [trip_id], references: [id])
-  
   @@fulltext([name , description])
 }

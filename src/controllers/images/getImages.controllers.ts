@@ -7,6 +7,7 @@ import { sortingPrismaConfig } from "../utils/sort.config";
 import { paginationPrismaConfig } from "../utils/pagination.config";
 import { requiredPrismaConfig } from "../utils/required.config";
 import { searchPrismaConfig } from "../utils/search.config";
+import { filterPrismaConfig } from "../utils/filter.config";
 
 const prisma = new PrismaClient();
 
@@ -17,13 +18,17 @@ export const getImages = async (
 
 
     const query : any = req.query;
-    const { sort , order , limit , page , required , search } =  query ;
+    const { sort , order , limit , page , required , search , location , trip } =  query ;
     
     //Sorting 
     const sortOptions  = sortingPrismaConfig(sort , order);
     const paginationOptions = paginationPrismaConfig(limit , page)
     const requiredOptions = requiredPrismaConfig(required);
     const searchOptions = searchPrismaConfig(search , ["name" , "description"]);
+    
+    const filterOptions = filterPrismaConfig({"location_id" : location , "trip_id" : trip });
+
+
 
     try {
       const images = await prisma.image.findMany({
@@ -31,11 +36,12 @@ export const getImages = async (
         ...paginationOptions,
         ...requiredOptions,
         where : {
-          ...searchOptions
+          ...searchOptions,
+          ...filterOptions
         },
-        include: {
-          location: true,
-        },
+        include : {
+          location : true,
+        }
       });
   
       return res
