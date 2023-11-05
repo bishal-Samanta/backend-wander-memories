@@ -8,6 +8,7 @@ import { paginationPrismaConfig } from "../utils/pagination.config";
 import { requiredPrismaConfig } from "../utils/required.config";
 import { searchPrismaConfig } from "../utils/search.config";
 import { getAllTripsForALocation } from "../utils/complexFilters.config";
+import { filterTripsByMonth, filterTripsByYear, filterTripsByYearAndMonth } from "../utils/date.config";
 
 const prisma = new PrismaClient();
 
@@ -20,7 +21,7 @@ export const getTrips = async (
         
     const query : any = req.query;
 
-    const { sort , order , limit , page , required , search , location } =  query ;
+    const { sort , order , limit , page , required , search , location , month , year } =  query ;
   
     
     //Prisma Configs 
@@ -29,7 +30,7 @@ export const getTrips = async (
     const requiredOptions = requiredPrismaConfig(required);
     const searchOptions = searchPrismaConfig(search , ["name" , "description"]);
     const getAllTripsForALocationObject = getAllTripsForALocation(location)
-
+    
 
     
     try {
@@ -43,10 +44,61 @@ export const getTrips = async (
                 
             },
             include: {
-                images : true
+             
             }
            
         });
+
+        if(month && !year){
+            const outputAfterFilteringMonth = filterTripsByMonth(Number(month) , trips);
+
+            return res
+            .status(Code.OK)
+            .send(
+                new HttpResponse(
+                Code.OK,
+                Status.OK,
+                `Data Retrived for : Trips`,
+                outputAfterFilteringMonth
+                )
+            );
+
+        }
+
+        if(year && !month){
+            const outputAfterFilteringYear = filterTripsByYear(Number(year) , trips);
+
+            return res
+            .status(Code.OK)
+            .send(
+                new HttpResponse(
+                Code.OK,
+                Status.OK,
+                `Data Retrived for : Trips`,
+                outputAfterFilteringYear
+                )
+            );
+
+        }
+
+        if(year && month){
+            const outputAfterFilteringYearAndMonth = filterTripsByYearAndMonth(Number(year) , Number(month)  , trips);
+            return res
+            .status(Code.OK)
+            .send(
+                new HttpResponse(
+                Code.OK,
+                Status.OK,
+                `Data Retrived for : Trips`,
+                outputAfterFilteringYearAndMonth
+                )
+            );
+
+        }
+
+
+
+
 
         return res
         .status(Code.OK)
