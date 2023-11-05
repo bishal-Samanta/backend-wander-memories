@@ -25,7 +25,6 @@ export const getImages = async (
     const paginationOptions = paginationPrismaConfig(limit , page)
     const requiredOptions = requiredPrismaConfig(required);
     const searchOptions = searchPrismaConfig(search , ["name" , "description"]);
-    
     const filterOptions = filterPrismaConfig({"location_id" : location , "trip_id" : trip });
 
 

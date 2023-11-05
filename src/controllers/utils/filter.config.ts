@@ -1,6 +1,7 @@
 
 
 export const filterPrismaConfig = ( filterObject : any ) =>{
+    console.log(filterObject)
     let filterOptions : any = {
 
     };
@@ -16,6 +17,8 @@ export const filterPrismaConfig = ( filterObject : any ) =>{
             filterOptions[key] = Number(filterObject[key])
         }
     }
+
+    console.log(filterOptions)
 
     return filterOptions; 
 }

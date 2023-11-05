@@ -7,6 +7,7 @@ import { sortingPrismaConfig } from "../utils/sort.config";
 import { paginationPrismaConfig } from "../utils/pagination.config";
 import { requiredPrismaConfig } from "../utils/required.config";
 import { searchPrismaConfig } from "../utils/search.config";
+import { getAllLocationsForaTrip } from "../utils/complexFilters.config";
 
 const prisma = new PrismaClient();
 
@@ -16,13 +17,14 @@ export const getLocations = async (
   ): Promise<Response<HttpResponse>> => {
 
     const query : any = req.query;
-    const { sort , order , limit , page , required , search } =  query ;
+    const { sort , order , limit , page , required , search , trip } =  query ;
     
     //Sorting 
     const sortOptions  = sortingPrismaConfig(sort , order);
     const paginationOptions = paginationPrismaConfig(limit , page)
     const requiredOptions = requiredPrismaConfig(required);
     const searchOptions = searchPrismaConfig(search , ["name"]);
+    const getAllLocationsForATrip = getAllLocationsForaTrip(trip);
 
     try {
       const locations = await prisma.location.findMany({
@@ -30,7 +32,12 @@ export const getLocations = async (
         ...paginationOptions,
         ...requiredOptions,
         where : {
-          ...searchOptions
+          ...searchOptions,
+          ...getAllLocationsForATrip
+          
+        },
+        include: {
+          images : true ,
         }
       });
   

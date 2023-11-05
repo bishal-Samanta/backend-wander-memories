@@ -7,6 +7,7 @@ import { sortingPrismaConfig } from "../utils/sort.config";
 import { paginationPrismaConfig } from "../utils/pagination.config";
 import { requiredPrismaConfig } from "../utils/required.config";
 import { searchPrismaConfig } from "../utils/search.config";
+import { getAllTripsForALocation } from "../utils/complexFilters.config";
 
 const prisma = new PrismaClient();
 
@@ -19,7 +20,7 @@ export const getTrips = async (
         
     const query : any = req.query;
 
-    const { sort , order , limit , page , required , search , month } =  query ;
+    const { sort , order , limit , page , required , search , location } =  query ;
   
     
     //Prisma Configs 
@@ -27,15 +28,8 @@ export const getTrips = async (
     const paginationOptions = paginationPrismaConfig(limit , page)
     const requiredOptions = requiredPrismaConfig(required);
     const searchOptions = searchPrismaConfig(search , ["name" , "description"]);
-    let filterOption;
+    const getAllTripsForALocationObject = getAllTripsForALocation(location)
 
-    // if(month){
-    //     filterOption = {
-    //         start_date : {
-    //             contains : month.toString()
-    //         }
-    //     }
-    // }
 
     
     try {
@@ -45,8 +39,12 @@ export const getTrips = async (
             ...requiredOptions ,
             where : {
                 ...searchOptions,
-
+                ...getAllTripsForALocationObject
+                
             },
+            include: {
+                images : true
+            }
            
         });
 
